@@ -21,14 +21,16 @@ typedef struct {
     int timestamp;
     int isFree; //0 = no, 1 = yes
     int index;
+    char floor;
 } ParkPlace;
 
-ParkPlace newParkPlace(int p) {
+ParkPlace newParkPlace(int p, char floor) {
     ParkPlace place;
     place.isFree = 1;
-    place.timestamp = NULL;
+    place.timestamp = 0;
     place.rz[0] = '\0';
-    place.index = p;
+    place.index = p;    
+    place.floor = floor;
 
     return place;
 }
@@ -45,7 +47,7 @@ Floor floorInit(char id, int maxPlaces) {
 
     f.places = (ParkPlace*)malloc(sizeof(ParkPlace) * maxPlaces);
     for(int i = 0; i < maxPlaces; i++) {
-        f.places[i] = newParkPlace(i);
+        f.places[i] = newParkPlace(i, id);
     }
 
     f.placesCount = maxPlaces;
@@ -58,12 +60,18 @@ Floor floorInit(char id, int maxPlaces) {
 typedef struct {
     Floor* floors;
     int floorsCount;
+    int placesCount;
+    int firstI;
+    int firstJ;
 } Park;
 
 Park initPark(int floors, int maxPlaces) {
     Park p;
     p.floors = (Floor*)malloc(sizeof(*(p.floors)) * floors);
     p.floorsCount = floors;
+    p.firstI = 0;
+    p.firstJ = 0;
+    p.placesCount = maxPlaces;
 
     for(int i = 0; i < floors; i++) {
         p.floors[i] = floorInit(getFloorId(i), maxPlaces);
@@ -83,18 +91,49 @@ void freePark(Park* p) {
 
 
 int findParkPlace(Park* p, char currentRZ[10]) {
+    int lastTimestampI, lastTimestampJ;
+
     for(int i = 0; i < p->floorsCount; i++) {
         for(int j = 0; j < p->floors[i].placesCount; j++) {
             if(p->floors[i].places[j].isFree) {
                 p->floors[i].places[j].isFree = 0;
                 strcpy(p->floors[i].places[j].rz, currentRZ);
-                p->floors[i].places[j].timestamp = 0;
 
-                printf("Pozice: %c%d\n",  p->floors[i].idAsChar, p->floors[i].places[j].index);
+                printf(
+                    "Pozice: %c%d\n",  
+                    p->floors[i].idAsChar, 
+                    p->floors[i].places[j].index
+                );
                 return 1;
             }
         }
     }
+
+    printf(
+        "Odtah vozu %s z pozice %c%d\n", 
+        p->floors[p->firstI].places[p->firstJ].rz, 
+        p->floors[p->firstI].idAsChar,
+        p->floors[p->firstI].places[p->firstJ].index
+    );
+    printf(
+        "Pozice: %c%d\n", 
+        p->floors[p->firstI].idAsChar,
+        p->floors[p->firstI].places[p->firstJ].index
+    );
+    p->floors[p->firstI].places[p->firstJ].rz[0] = '\0';
+    strcpy(p->floors[p->firstI].places[p->firstJ].rz, currentRZ);
+
+    if(p->firstJ == (p->placesCount - 1)) {
+        if(p->firstI == (p->floorsCount - 1)) {
+            p->firstI = 0;
+        } else {
+            p->firstI += 1;
+        }
+        p->firstJ = 0;
+    } else {
+        p->firstJ += 1;
+    }
+    
     return 0;
 }
 
@@ -151,9 +190,7 @@ int main(void) {
 
         if(symbol == '+') {
             //add
-            if(!findParkPlace(&p, currentRZ)) {
-                printf("Neni misto.\n");
-            }
+            findParkPlace(&p, currentRZ);
         } else {
             //remove
             if(!freeParkPlace(&p, currentRZ)) {
