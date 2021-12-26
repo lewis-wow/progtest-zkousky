@@ -17,19 +17,40 @@ char getFloorId(int index) {
 }
 
 typedef struct {
-    char* rz;
+    char rz[11];
     int timestamp;
+    int isFree; //0 = no, 1 = yes
+    int index;
 } ParkPlace;
 
+ParkPlace newParkPlace(int p) {
+    ParkPlace place;
+    place.isFree = 1;
+    place.timestamp = NULL;
+    place.rz[0] = '\0';
+    place.index = p;
+
+    return place;
+}
+
 typedef struct {
-    char id;
+    int id;
+    char idAsChar;
+    int placesCount;
     ParkPlace* places;
 } Floor;
 
 Floor floorInit(char id, int maxPlaces) {
     Floor f;
+
     f.places = (ParkPlace*)malloc(sizeof(ParkPlace) * maxPlaces);
-    f.id = id;
+    for(int i = 0; i < maxPlaces; i++) {
+        f.places[i] = newParkPlace(i);
+    }
+
+    f.placesCount = maxPlaces;
+    f.idAsChar = id;
+    f.id = getFloorsCount(id);
 
     return f;
 }
@@ -53,10 +74,7 @@ Park initPark(int floors, int maxPlaces) {
 
 void freePark(Park* p) {
     for(int i = 0; i < p->floorsCount; i++) {
-        for(int i = 0; i < p->floorsCount; i++) {
-            free(p->floors[i].places);
-        }
-        free(p->floors);
+        free(p->floors[i].places);
     }
     free(p->floors);
     p->floors = NULL;
@@ -64,6 +82,37 @@ void freePark(Park* p) {
 }
 
 
+int findParkPlace(Park* p, char currentRZ[10]) {
+    for(int i = 0; i < p->floorsCount; i++) {
+        for(int j = 0; j < p->floors[i].placesCount; j++) {
+            if(p->floors[i].places[j].isFree) {
+                p->floors[i].places[j].isFree = 0;
+                strcpy(p->floors[i].places[j].rz, currentRZ);
+                p->floors[i].places[j].timestamp = 0;
+
+                printf("Pozice: %c%d\n",  p->floors[i].idAsChar, p->floors[i].places[j].index);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int freeParkPlace(Park* p, char currentRZ[10]) {
+    for(int i = 0; i < p->floorsCount; i++) {
+        for(int j = 0; j < p->floors[i].id; j++) {
+            if(!strcmp(p->floors[i].places[j].rz, currentRZ)) {
+                p->floors[i].places[j].rz[0] = '\0';
+                p->floors[i].places[j].isFree = 1;
+                p->floors[i].places[j].timestamp = 0;
+
+                printf("Pozice: %c%d\n", p->floors[i].idAsChar, p->floors[i].places[j].index);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
 
 
 int main(void) {
@@ -81,6 +130,45 @@ int main(void) {
     int maxFloors = getFloorsCount(maxId);
     Park p = initPark(maxFloors, maxPlaces);
 
-    printf("%d", maxFloors);
+    printf("Pozadavky:\n");
+
+    char currentRZ[11];
+    char symbol;
+    int scanfRes;
+
+    while((scanfRes = scanf(" %c", &symbol)) != EOF) {
+        if(scanfRes != 1 || (symbol != '+' && symbol != '-')) {
+            freePark(&p);
+            printf("Nespravny vstup.\n");
+            return 1;
+        }
+
+        if(scanf(" %10s", currentRZ) != 1) {
+            freePark(&p);
+            printf("Nespravny vstup.\n");
+            return 1;
+        }
+
+        if(symbol == '+') {
+            //add
+            if(!findParkPlace(&p, currentRZ)) {
+                printf("Neni misto.\n");
+            }
+        } else {
+            //remove
+            if(!freeParkPlace(&p, currentRZ)) {
+                printf("Nenalezeno.\n");
+            }
+        }   
+    }
+
+
+    if(feof(stdin)) {
+        freePark(&p);
+        printf("Nespravny vstup.\n");
+        return 1;
+    }
+
+    freePark(&p);
     return 0;
 }
