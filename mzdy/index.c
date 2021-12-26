@@ -49,7 +49,7 @@ int readWages(double* arr) {
 }
 
 int readQuery(double* arr, int* used) {
-    scanf(" "); //prevent space on very begging!
+    scanf(" ");
 
     char key;
     double sum = 0;
