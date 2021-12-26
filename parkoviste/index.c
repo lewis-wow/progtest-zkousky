@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 /*
     UKOL:
@@ -18,19 +17,16 @@ char getFloorId(int index) {
 
 typedef struct {
     char rz[11];
-    int timestamp;
     int isFree; //0 = no, 1 = yes
     int index;
     char floor;
 } ParkPlace;
 
-ParkPlace newParkPlace(int p, char floor) {
+ParkPlace newParkPlace(int index) {
     ParkPlace place;
     place.isFree = 1;
-    place.timestamp = 0;
     place.rz[0] = '\0';
-    place.index = p;    
-    place.floor = floor;
+    place.index = index;    
 
     return place;
 }
@@ -47,7 +43,7 @@ Floor floorInit(char id, int maxPlaces) {
 
     f.places = (ParkPlace*)malloc(sizeof(ParkPlace) * maxPlaces);
     for(int i = 0; i < maxPlaces; i++) {
-        f.places[i] = newParkPlace(i, id);
+        f.places[i] = newParkPlace(i);
     }
 
     f.placesCount = maxPlaces;
@@ -143,7 +139,6 @@ int freeParkPlace(Park* p, char currentRZ[10]) {
             if(!strcmp(p->floors[i].places[j].rz, currentRZ)) {
                 p->floors[i].places[j].rz[0] = '\0';
                 p->floors[i].places[j].isFree = 1;
-                p->floors[i].places[j].timestamp = 0;
 
                 printf("Pozice: %c%d\n", p->floors[i].idAsChar, p->floors[i].places[j].index);
                 return 1;
@@ -152,7 +147,6 @@ int freeParkPlace(Park* p, char currentRZ[10]) {
     }
     return 0;
 }
-
 
 int main(void) {
 
