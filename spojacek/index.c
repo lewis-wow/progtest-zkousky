@@ -3,6 +3,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+/*
+    UKOL:
+    https://www.fit-wiki.cz/%C5%A1kola/p%C5%99edm%C4%9Bty/bi-pa1/pa1_zkouska_2017_9_1
+*/
+
 typedef struct TItem {
     struct TItem * m_Next;
     char *m_Word;
