@@ -49,7 +49,7 @@ int readWages(double* arr) {
 }
 
 int readQuery(double* arr, int* used) {
-    scanf(" "); //prevent space on very begging!
+    scanf(" ");
 
     char key;
     double sum = 0;
@@ -65,7 +65,6 @@ int readQuery(double* arr, int* used) {
             if(qLen == 0) {
                 printf("N/A\n");
             } else {
-                printf("= %lf, %d\n", sum, qLen);
                 printf("= %lf\n", (double)sum / qLen);
             }
             sum = 0;
