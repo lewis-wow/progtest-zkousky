@@ -21,7 +21,7 @@ int cmp(const void* a_, const void* b_) {
     int a = *(int*)a_;
     int b = *(int*)b_;
 
-    return (a - b);
+    return (a > b) - (a < b); 
 }
 
 int main(void) {
