@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 //  [1, 2, 3, 4, 5]
 int binarySearchRec(int arr[], int start, int end, int target) {
@@ -24,6 +25,14 @@ int cmp(const void* a_, const void* b_) {
     return (a > b) - (a < b); 
 }
 
+int doubleEpsilon(double a, double b) {
+    double epsilon = 5e-5;
+
+    if(fabs(a - b) < epsilon) return 0;
+    if(a > b) return 1;
+    return -1;
+}
+
 int main(void) {
 
     int arr[456];
@@ -43,6 +52,39 @@ int main(void) {
     }
     printf("]\n");*/
 
-    printf("%d", binarySearch(arr, arrSize, 4));
+    printf("%d\n", binarySearch(arr, arrSize, 4));
+    printf("%d\n", doubleEpsilon(3.3333333333, 3.33353333332));
+
+    const char* str = "Hello world, how are you?";
+    //splice -> world
+    char dest[6];
+    strncpy(dest, str + 6, 5);
+    printf("%s\n", dest);
+
+    const char* str2 = "Hello world, how are you?";
+    //splice -> world are
+    char dest2[10] = {0}; 
+    strncpy(dest2, str2 + 6, 5);
+    strncpy(dest2 + 5, str2 + 6 + 5 + 5, 4);
+    printf("%s\n", dest2);
+
+    const char* str3 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //splice -> ACEGIKMOQSUWY
+    char dest3[15] = {0}; 
+    for(int i = 0; i < 14; i++) {
+        strncpy(dest3 + i, str3 + 2 * i, 1);
+    }
+    printf("%s\n", dest3);
+
+    const char* str4 = "Bunny";
+    //result -> Bunynynynynynny
+    char dest4[16] = {0}; 
+    strncpy(dest4, str4, 2);
+    for(int i = 2; i < 10 + 2; i+=2) {
+        strncpy(dest4 + i, str4 + 3, 2);
+    }
+    strncpy(dest4 + 10 + 2, str4 + 2, 3);
+    printf("%s\n", dest4);
+
     return 0;
 }
