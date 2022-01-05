@@ -51,8 +51,14 @@ void permute(MagicKeywords* m, int index) {
     }
 
     for(size_t i = index; i < m->used; i++) {
-        xorSwap(m->keywords[index], m->keywords[i]);
+        char* tmp = m->keywords[index];
+        m->keywords[index] = m->keywords[i];
+        m->keywords[i] = tmp;
+
         permute(m, index + 1);
+
+        m->keywords[i] = m->keywords[index];
+        m->keywords[index] = tmp;
     }
     
 }

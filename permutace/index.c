@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <string.h>
 #include <ctype.h>
+#include <string.h>
+#include <math.h>
 
 void permuteRec(int arr[], int arrLen, int index) {
     if(index >= arrLen) {
@@ -14,16 +14,14 @@ void permuteRec(int arr[], int arrLen, int index) {
     }
 
     for(int i = index; i < arrLen; i++) {
-        //swap
-        int tmp = arr[i];
-        arr[i] = arr[index];
-        arr[index] = tmp;
+        int tmp = arr[index];
+        arr[index] = arr[i];
+        arr[i] = tmp;
 
         permuteRec(arr, arrLen, index + 1);
 
-        //swap back
-        arr[index] = arr[i];
-        arr[i] = tmp;
+        arr[i] = arr[index];
+        arr[index] = tmp;
     }
 }
 

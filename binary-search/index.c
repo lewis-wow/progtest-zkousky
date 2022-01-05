@@ -1,20 +1,22 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
+#include <stdio.h>
+#include <math.h>
 #include <string.h>
+#include <ctype.h>
 
-int binSearchRec(int arr[], int start, int end, int target) {
+int binarySearchRec(int arr[], int start, int end, int target) {
     if(start > end) return 0;
-    int mid = (start + end) / 2;
 
+    int mid = (start + end) / 2;
     if(arr[mid] == target) return 1;
- 
-    if(target > arr[mid]) return binSearchRec(arr, mid + 1, end, target);
-    return binSearchRec(arr, start, mid - 1, target);
+
+    if(target > arr[mid]) return binarySearchRec(arr, mid + 1, end, target);
+    return binarySearchRec(arr, start, mid - 1, target);
 }
 
-int binSearch(int arr[], int arrLen, int target) {
-    return binSearchRec(arr, 0, arrLen, target);
+
+int binarySearch(int arr[], int arrLen, int target) {
+    return binarySearchRec(arr, 0, arrLen, target);
 }
 
 int cmp(const void* a_, const void* b_) {
@@ -25,10 +27,9 @@ int cmp(const void* a_, const void* b_) {
 }
 
 int main(void) {
-
-    int arr[3] = {1, 2, 3};
+    int arr[3] = {2, 3, 1};
     qsort(arr, 3, sizeof(int), cmp);
 
-    printf("%d", binSearch(arr, 3, 0));
-    return 0;
+    printf("%d", binarySearch(arr, 3, 0));
+    return 0;   
 }
