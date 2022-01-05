@@ -6,6 +6,7 @@
 
 void permuteRec(int arr[], int arrLen, int index) {
     if(index >= arrLen) {
+
         for(int i = 0; i < arrLen; i++) {
             printf("%d ", arr[i]);
         }
@@ -14,6 +15,7 @@ void permuteRec(int arr[], int arrLen, int index) {
     }
 
     for(int i = index; i < arrLen; i++) {
+
         int tmp = arr[index];
         arr[index] = arr[i];
         arr[i] = tmp;

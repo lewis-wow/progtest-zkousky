@@ -8,12 +8,11 @@ int binarySearchRec(int arr[], int start, int end, int target) {
     if(start > end) return 0;
 
     int mid = (start + end) / 2;
-    if(arr[mid] == target) return 1;
+    if(target == arr[mid]) return 1;
 
     if(target > arr[mid]) return binarySearchRec(arr, mid + 1, end, target);
     return binarySearchRec(arr, start, mid - 1, target);
 }
-
 
 int binarySearch(int arr[], int arrLen, int target) {
     return binarySearchRec(arr, 0, arrLen, target);
@@ -30,6 +29,6 @@ int main(void) {
     int arr[3] = {2, 3, 1};
     qsort(arr, 3, sizeof(int), cmp);
 
-    printf("%d", binarySearch(arr, 3, 0));
+    printf("%d", binarySearch(arr, 3, 1));
     return 0;   
 }
