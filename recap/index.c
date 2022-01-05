@@ -115,6 +115,58 @@ void printArray(Array* a) {
     }
 }
 
+typedef struct {
+    int** data;
+    size_t size;
+    size_t used;
+} Array2d;
+
+void initArray2d(Array2d* a, size_t initSize) {
+    a->data = (int**)malloc(sizeof(*(a->data)) * initSize);
+    a->size = initSize;
+    a->used = 0;
+}
+
+void pushArray2d(Array2d* a, int* arr, int arrLen) {
+    if(a->size == a->used) {
+        a->size *= 2;
+        a->data = (int**)realloc(a->data, sizeof(*(a->data)) * a->size);
+    }
+    a->data[a->used] = (int*)malloc(sizeof(int) * arrLen);
+    for(size_t i = 0; i < arrLen; i++) {
+        a->data[a->used][i] = arr[i];
+    }
+    a->used += 1;
+}
+
+void freeArray2d(Array2d* a) {
+    /*for(size_t i = 0; i < a->used; i++) {
+        free(a->data[i]);
+    }*/
+    free(a->data);
+    a->data = NULL;
+    a->size = a->used = 0;
+}
+
+void printArray2d(Array2d* a) {
+    printf("[\n");
+    for(size_t i = 0; i < a->used; i++) {
+        printf("  [");
+        for(size_t j = 0; j < sizeof(*(a->data[i])) + 1; j++) {
+            printf("%d", a->data[i][j]);
+            if(j != sizeof(*(a->data[i]))) {
+                printf(", ");
+            }
+        }
+        printf("]");
+        if(i != a->used - 1) {
+            printf(",");
+        }
+        printf("\n");
+    }
+    printf("]\n");
+}
+
 int main(void) {
     /////////////////Permutations/////////////////
     printf("\nPermutations: \n");
@@ -141,7 +193,7 @@ int main(void) {
     strncpy(dst + strlen("This is prog sand"), str + strlen("This is String sandbox for prog"), strlen("test"));
     printf("%s\n", dst);
 
-    /////////////////Dynamic 2d array/////////////////
+    /////////////////Dynamic 2d O(n) array/////////////////
     printf("\nDynamic 2d array: \n");
     Array a;
     initArray(&a, 10, 3);
@@ -152,5 +204,17 @@ int main(void) {
     printArray(&a);
 
     freeArray(&a);
+
+    /////////////////Dynamic 2d O(n^2) array/////////////////
+    Array2d a2d;
+    initArray2d(&a2d, 10);
+    for(int i = 0; i < 5; i++) {
+        int arrInside[5] = {1, 2, 3, 4, 5};
+        pushArray2d(&a2d, arrInside, 5);
+    }
+
+    printArray2d(&a2d);
+
+    freeArray2d(&a2d);
     return 0;
 }
