@@ -3,17 +3,21 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-int rec2(char* a) {
-    return (a[0] && a[1]) ? 1 + rec2(a+2) : 0;
-}
- 
-void rec(char* a) {
-    a[rec2(a)]=0;
+int rec(unsigned int x,unsigned int y)
+{
+   if(x+y==0) return 0;
+   return x%2 + rec(x/2,y/2) - (y%2);
 }
 
-int main(void) {
-    char a[7] = "abcdef";
-    rec(a);
-    printf("%s\n", a);
-    return 0;
+//1 + (1 + (1 + (1 + 0 - 0) - 1) - 0) - 1
+int main ( void )
+{
+  int x,y;
+x=rec(4,8);
+y=rec(15,5);
+printf("%d\n", x);
+ printf("%d\n", y);
+ printf("%d\n", 2 / 2);
+
+  return 0;
 }
