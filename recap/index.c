@@ -73,6 +73,7 @@ typedef struct {
 } Array;
 
 void initArray(Array* a, size_t initSize, int serialize) {
+    //O(1)
     a->data = (Coords**)malloc(sizeof(*(a->data)) * initSize);
     a->size = initSize;
     a->used = 0;
@@ -80,6 +81,7 @@ void initArray(Array* a, size_t initSize, int serialize) {
 }
 
 void pushArray(Array* a, Coords item) {
+    //O(1)
     if(a->size == a->used) {
         a->size *= 2;
         a->data = (Coords**)realloc(a->data, sizeof(*(a->data)) * a->size);
@@ -94,6 +96,7 @@ void pushArray(Array* a, Coords item) {
 }
 
 void freeArray(Array* a) {
+    //O(n)
     for(size_t i = 0; i < (size_t)ceil((double)a->used / a->serialize); i++) {
         free(a->data[i]);
     }
@@ -113,11 +116,13 @@ void printArray(Array* a) {
 }
 
 int main(void) {
+    /////////////////Permutations/////////////////
     printf("\nPermutations: \n");
     int n = 3;
     int arr[3] = {1, 2, 3};
     permute(arr, n);
 
+    /////////////////Binary search/////////////////
     printf("\nBinary search: \n");
     int n2 = 3;
     int arr2[3] = {5, 2, 9};
@@ -136,6 +141,7 @@ int main(void) {
     strncpy(dst + strlen("This is prog sand"), str + strlen("This is String sandbox for prog"), strlen("test"));
     printf("%s\n", dst);
 
+    /////////////////Dynamic 2d array/////////////////
     printf("\nDynamic 2d array: \n");
     Array a;
     initArray(&a, 10, 3);
